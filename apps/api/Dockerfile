@@ -38,11 +38,9 @@ COPY apps/api/package.json ./apps/api/
 # Install production dependencies only
 RUN pnpm install --prod --frozen-lockfile || pnpm install --prod
 
-# Copy Prisma schema & generated client from builder
+# Copy Prisma schema and generate client directly in production stage
 COPY --from=builder /app/apps/api/prisma ./apps/api/prisma/
-COPY --from=builder /app/apps/api/node_modules/.prisma ./apps/api/node_modules/.prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-
+RUN cd apps/api && npx prisma generate
 # Copy compiled output
 COPY --from=builder /app/apps/api/dist ./apps/api/dist/
 
