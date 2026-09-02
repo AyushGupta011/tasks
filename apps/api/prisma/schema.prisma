@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum MechanicStatus {
+  AVAILABLE
+  ON_JOB
+  OFFLINE
+}
+
+enum BookingStatus {
+  PENDING
+  ASSIGNED
+  MECHANIC_ON_THE_WAY
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String
+  createdAt DateTime @default(now())
+
+  bookings Booking[]
+
+  @@map("customers")
+}
+
+model Mechanic {
+  id            String         @id @default(cuid())
+  name          String
+  phone         String
+  status        MechanicStatus @default(AVAILABLE)
+  jobsCompleted Int            @default(0)
+  currentLat    Float?
+  currentLng    Float?
+  createdAt     DateTime       @default(now())
+
+  bookings Booking[]
+
+  @@index([status])
+  @@map("mechanics")
+}
+
+model ServiceCategory {
+  id   String @id @default(cuid())
+  name String @unique
+
+  bookings Booking[]
+
+  @@map("service_categories")
+}
+
+model Booking {
+  id                String        @id @default(cuid())
+  customerId        String
+  mechanicId        String?
+  serviceCategoryId String
+  status            BookingStatus @default(PENDING)
+  amount            Decimal       @db.Decimal(10, 2)
+  vehicleMake       String
+  vehicleModel      String
+  vehiclePlate      String
+  scheduledAt       DateTime
+  completedAt       DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  customer        Customer        @relation(fields: [customerId], references: [id])
+  mechanic        Mechanic?       @relation(fields: [mechanicId], references: [id])
+  serviceCategory ServiceCategory @relation(fields: [serviceCategoryId], references: [id])
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([mechanicId])
+  @@map("bookings")
+}
