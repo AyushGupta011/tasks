@@ -17,7 +17,7 @@ COPY apps/api/src ./apps/api/src/
 RUN pnpm install --frozen-lockfile || pnpm install
 
 # Generate Prisma client
-RUN cd apps/api && npx prisma generate
+RUN cd apps/api && npx prisma@6 generate
 
 # Compile TypeScript
 RUN cd apps/api && npx tsc
@@ -40,7 +40,7 @@ RUN pnpm install --prod --frozen-lockfile || pnpm install --prod
 
 # Copy Prisma schema and generate client directly in production stage
 COPY --from=builder /app/apps/api/prisma ./apps/api/prisma/
-RUN cd apps/api && npx prisma generate
+RUN cd apps/api && npx prisma@6 generate
 # Copy compiled output
 COPY --from=builder /app/apps/api/dist ./apps/api/dist/
 
