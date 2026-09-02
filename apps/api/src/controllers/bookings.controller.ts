@@ -7,13 +7,13 @@ export async function listBookings(req: Request, res: Response) {
 }
 
 export async function getBooking(req: Request, res: Response) {
-  const booking = await bookingsService.getBookingById(req.params.id);
+  const booking = await bookingsService.getBookingById(req.params.id as string);
   res.json({ data: booking });
 }
 
 export async function updateBookingStatus(req: Request, res: Response) {
   const { status, mechanicId } = req.body;
-  const booking = await bookingsService.updateBookingStatus(req.params.id, status, mechanicId);
+  const booking = await bookingsService.updateBookingStatus(req.params.id as string, status, mechanicId);
 
   // Emit via socket.io (attached to req by server setup)
   const io = req.app.get('io');

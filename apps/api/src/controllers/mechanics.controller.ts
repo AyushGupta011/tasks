@@ -9,6 +9,6 @@ export async function listMechanics(req: Request, res: Response) {
 }
 
 export async function getMechanic(req: Request, res: Response) {
-  const mechanic = await mechanicsService.getMechanicById(req.params.id);
+  const mechanic = await mechanicsService.getMechanicById(req.params.id as string);
   res.json({ data: mechanic });
 }

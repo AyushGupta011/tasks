@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Application } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
@@ -12,7 +12,7 @@ import bookingsRoutes from './routes/bookings.routes.js';
 import mechanicsRoutes from './routes/mechanics.routes.js';
 import customersRoutes from './routes/customers.routes.js';
 
-const app = express();
+const app: Application = express();
 
 // ── Global Middleware ────────────────────────────────────────────────────────
 
